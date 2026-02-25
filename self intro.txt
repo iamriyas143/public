@@ -1,0 +1,36 @@
+Good Morning/afternoon/evening to everyone.
+
+First of All, Thank you for giving me this opportunity to introduce myself.
+
+My name is alen, and i am from Chennai.I ma currently pursing my final year of my Bachelors degree in information technology with cyber security in abc college, chennai.
+
+I have a strong intrest in Hacking,so i choose cybersecurity as my passion and professioin. Throught my academic journey , i am foucused on building a strong foundation in both theoretical 
+and practical aspects of my field.And i specifically building my skills in web application security and Red teaming.
+
+I have also completed my internship at cybertech.i worked as an junior penetration tested along with a 5 member team, where i gained real world experience on conducting security assesments which helped me to understand how industry environments operate ,and i glad to share that i found two high level vulnerabilities during my testing which was responsibly documented and reported.
+
+currently, I am working on my final year project "LLM Threat Detection and Defense system" which is still under development. This project focuses on protecting common LLM attacks,and it is helping me to strengthen my knowledge in this emerging field.
+
+As an Achievement , I secured a Top 100 globally in CTF event cordially conducted by BlackHat and Bugcrowd in 2025.As a reward i received a recognition medal from Bugcrowd.And i am ranked top 2% in tryhackme by completing over 143 rooms, which reflects my consistent hands-on practice and dedication to learning.
+
+My current goal is to achieve a good position in a well established company ,where i can build my career and contribute to grow together.
+
+Thank You
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Good morning everyone.
+
+My name is Alen, and I’m currently in my final year of a Bachelor’s degree in Information Technology with a specialization in Cybersecurity in Chennai.
+
+I have a strong interest in offensive security, especially web application security and red teaming. Throughout my academic journey, I’ve focused on building both theoretical knowledge and practical skills through hands-on labs and real-world testing.
+
+I completed an internship at CyberTech as a Junior Penetration Tester, where I worked with a five-member team conducting security assessments. During this internship, I identified and responsibly reported two high-severity vulnerabilities, which gave me valuable exposure to real industry environments.
+
+I’m currently developing my final year project titled “LLM Threat Detection and Defense System,” which focuses on detecting and preventing common attacks against large language models.
+
+As part of my achievements, I secured a Top 100 global rank in a CTF event conducted by Black Hat and Bugcrowd in 2025, for which I received a recognition medal. I am also ranked in the top 2% on TryHackMe after completing over 143 rooms.
+
+I’m now looking to begin my career as a Junior Cybersecurity Analyst where I can apply my skills, continue learning, and contribute to strengthening organizational security.
+
+Thank you.
