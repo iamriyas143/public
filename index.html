@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemma Chat</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1e1e1e;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            color: #ffffff;
+        }
+        header {
+            background-color: #2d2d2d;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #444;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        #chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+        }
+        #chat-container.initial {
+            justify-content: center;
+            align-items: center;
+        }
+        #chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: #1e1e1e;
+        }
+        #chat-container.initial #chat-messages {
+            display: none;
+        }
+        #chat-container.initial #input-form {
+            position: absolute;
+            bottom: auto;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            max-width: 600px;
+        }
+        .message {
+            display: flex;
+            align-items: flex-start;
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.3s ease forwards;
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .message.user {
+            align-self: flex-end;
+            background-color: #007bff;
+            color: white;
+            margin-left: auto;
+        }
+        .message.ai {
+            align-self: flex-start;
+            background-color: #2d2d2d;
+            color: #ffffff;
+            border: 1px solid #444;
+        }
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .avatar.user {
+            background-color: #007bff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        .avatar.ai {
+            background-color: #10a37f;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        .message-content {
+            flex: 1;
+        }
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background-color: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 18px;
+            max-width: 70%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            margin-left: 10px;
+        }
+        .dot {
+            width: 6px;
+            height: 6px;
+            background-color: #10a37f;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+        #input-form {
+            display: flex;
+            padding: 0 20px 20px 20px;
+            background-color: transparent;
+            border-top: none;
+        }
+        #message-input {
+            flex: 1;
+            max-width: 600px;
+            min-height: 40px;
+            padding: 12px 16px;
+            border: 1px solid #555;
+            border-radius: 25px;
+            outline: none;
+            font-size: 16px;
+            resize: none;
+            background-color: transparent;
+            color: #ffffff;
+            overflow-wrap: break-word;
+            overflow-x: hidden;
+            white-space: pre-wrap;
+        }
+        #message-input::placeholder {
+            color: #aaa;
+        }
+        #send-button {
+            margin-left: 10px;
+            padding: 12px 20px;
+            background-color: #10a37f;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        #send-button:hover {
+            background-color: #0d8a6a;
+        }
+        #send-button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <header>Gemma Chat</header>
+    <div id="chat-container">
+        <div id="chat-messages"></div>
+        <form id="input-form">
+            <textarea id="message-input" placeholder="Type your message..." required></textarea>
+            <button type="submit" id="send-button">Send</button>
+        </form>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chat-messages');
+        const messageInput = document.getElementById('message-input');
+        const inputForm = document.getElementById('input-form');
+        const chatContainer = document.getElementById('chat-container');
+
+        // Initially center the input form
+        chatContainer.classList.add('initial');
+
+        inputForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const prompt = messageInput.value.trim();
+            if (!prompt) return;
+
+            // Add user message
+            addMessage(prompt, 'user');
+            messageInput.value = '';
+
+            // Disable send button
+            const sendButton = document.getElementById('send-button');
+            sendButton.disabled = true;
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            // Send to backend
+            try {
+                const res = await fetch("http://localhost:8000/ask", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ prompt })
+                });
+                const data = await res.json();
+                // Hide typing indicator
+                hideTypingIndicator();
+                // Add AI response
+                addMessage(data.response, 'ai');
+            } catch (error) {
+                // Hide typing indicator
+                hideTypingIndicator();
+                addMessage('Error: Unable to get response.', 'ai');
+            } finally {
+                // Re-enable send button
+                sendButton.disabled = false;
+            }
+        });
+
+        function addMessage(text, sender) {
+            // Remove initial state after first message
+            if (chatContainer.classList.contains('initial')) {
+                chatContainer.classList.remove('initial');
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+
+            if (sender === 'ai') {
+                const avatarDiv = document.createElement('div');
+                avatarDiv.className = `avatar ${sender}`;
+                avatarDiv.textContent = 'G';
+                messageDiv.appendChild(avatarDiv);
+            }
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = text;
+
+            messageDiv.appendChild(contentDiv);
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.id = 'typing-indicator';
+
+            const avatarDiv = document.createElement('div');
+            avatarDiv.className = 'avatar ai';
+            avatarDiv.textContent = 'G';
+
+            const dotsDiv = document.createElement('div');
+            dotsDiv.className = 'typing-dots';
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                dotsDiv.appendChild(dot);
+            }
+
+            typingDiv.appendChild(avatarDiv);
+            typingDiv.appendChild(dotsDiv);
+
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const typingDiv = document.getElementById('typing-indicator');
+            if (typingDiv) {
+                typingDiv.remove();
+            }
+        }
+    </script>
+</body>
+</html>
