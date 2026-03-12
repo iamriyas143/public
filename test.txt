@@ -1,0 +1,11 @@
+(venv) riyas@riyas-VMware-Virtual-Platform:~/project/dashboard/backend$ uvicorn server:app --reload --host 0.0.0.0 --port 5500
+INFO:     Will watch for changes in these directories: ['/home/riyas/project/dashboard/backend']
+INFO:     Uvicorn running on http://0.0.0.0:5500 (Press CTRL+C to quit)
+INFO:     Started reloader process [12360] using StatReload
+INFO:     Started server process [12362]
+INFO:     Waiting for application startup.
+Server started and tailing logs...
+INFO:     Application startup complete.
+WARNING:  Unsupported upgrade request.
+WARNING:  No supported WebSocket library detected. Please use "pip install 'uvicorn[standard]'", or install 'websockets' or 'wsproto' manually.
+INFO:     127.0.0.1:35434 - "GET /ws/logs HTTP/1.1" 404 Not Found
